@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CYBER // BREACH</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#000;
+    color:#00ff66;
+    font-family:"Courier New",monospace;
+    overflow:hidden;
+}
+
+#matrix{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+}
+
+.overlay{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background:
+        radial-gradient(circle,transparent 0%,rgba(0,0,0,.94) 90%),
+        repeating-linear-gradient(
+            0deg,
+            rgba(0,255,100,.025) 0px,
+            rgba(0,255,100,.025) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+}
+
+.container{
+    width:94%;
+    max-width:1450px;
+    margin:25px auto;
+}
+
+.header{
+    border:1px solid #00ff66;
+    padding:18px 22px;
+    background:rgba(0,10,5,.85);
+    box-shadow:0 0 20px rgba(0,255,100,.25);
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+    letter-spacing:5px;
+    text-shadow:0 0 10px #00ff66,0 0 25px #00ff66;
+}
+
+.status{
+    margin-top:8px;
+    font-size:13px;
+}
+
+.dot{
+    display:inline-block;
+    width:8px;
+    height:8px;
+    background:#00ff66;
+    border-radius:50%;
+    box-shadow:0 0 10px #00ff66;
+    margin-right:7px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1.7fr 1fr;
+    gap:18px;
+    margin-top:18px;
+}
+
+.panel{
+    border:1px solid #00ff66;
+    background:rgba(0,8,4,.87);
+    box-shadow:0 0 18px rgba(0,255,100,.12);
+}
+
+.panel-title{
+    padding:10px 14px;
+    border-bottom:1px solid #00ff66;
+    background:rgba(0,255,100,.06);
+    font-weight:bold;
+}
+
+.terminal{
+    height:460px;
+    padding:15px;
+    overflow:hidden;
+    font-size:14px;
+    line-height:1.55;
+}
+
+.line{margin-bottom:5px}
+.dim{color:#3c8f5d}
+.warning{color:#ffe600}
+
+.analysis{
+    padding:18px;
+}
+
+.item{
+    margin-bottom:20px;
+}
+
+.label{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:7px;
+    font-size:13px;
+}
+
+.bar{
+    height:9px;
+    border:1px solid #00ff66;
+    padding:1px;
+}
+
+.fill{
+    height:100%;
+    width:0%;
+    background:#00ff66;
+    box-shadow:0 0 10px #00ff66;
+    transition:width .25s;
+}
+
+.events{
+    height:245px;
+    overflow:hidden;
+    padding:12px;
+    font-size:12px;
+}
+
+.event{
+    margin-bottom:8px;
+    opacity:.8;
+}
+
+.footer{
+    margin-top:18px;
+    border:1px solid #00ff66;
+    padding:12px;
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+}
+
+/* FINAL SCREEN */
+
+.access{
+    position:fixed;
+    inset:0;
+    background:
+        radial-gradient(circle,rgba(0,255,100,.14),#000 65%);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    z-index:20;
+}
+
+.access h1{
+    font-size:65px;
+    letter-spacing:10px;
+    margin:0;
+    text-shadow:
+        0 0 10px #00ff66,
+        0 0 30px #00ff66,
+        0 0 70px #00ff66;
+    animation:pulse 1s infinite alternate;
+}
+
+.realname{
+    font-size:30px;
+    margin-top:18px;
+    text-shadow:0 0 15px #00ff66;
+}
+
+.encrypted{
+    color:#ffe600;
+    margin-top:12px;
+    font-size:18px;
+}
+
+.time{
+    color:#aaa;
+    margin-top:15px;
+}
+
+@keyframes pulse{
+    from{opacity:.55}
+    to{opacity:1}
+}
+
+@media(max-width:900px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    body{
+        overflow:auto;
+    }
+
+    .terminal{
+        height:400px;
+    }
+
+    .access h1{
+        font-size:38px;
+        letter-spacing:5px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+<div class="overlay"></div>
+
+<div class="container">
+
+    <div class="header">
+
+        <div class="logo">
+            CYBER//BREACH
+        </div>
+
+        <div class="status">
+            <span class="dot"></span>
+            ENCRYPTED SESSION INITIALIZING...
+        </div>
+
+    </div>
+
+
+    <div class="grid">
+
+        <!-- TERMINAL -->
+
+        <div class="panel">
+
+            <div class="panel-title">
+                TERMINAL // SYSTEM CONSOLE
+            </div>
+
+            <div class="terminal" id="terminal">
+
+                <div class="line dim">
+                    Initializing secure environment...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+
+        <div>
+
+            <div class="panel">
+
+                <div class="panel-title">
+                    SYSTEM ANALYSIS
+                </div>
+
+                <div class="analysis">
+
+                    <div class="item">
+
+                        <div class="label">
+                            <span>NETWORK</span>
+                            <span id="networkText">0%</span>
+                        </div>
+
+                        <div class="bar">
+                            <div
+                                class="fill"
+                                id="network"
+                            ></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="item">
+
+                        <div class="label">
+                            <span>FIREWALL</span>
+                            <span id="firewallText">0%</span>
+                        </div>
+
+                        <div class="bar">
+                            <div
+                                class="fill"
+                                id="firewall"
+                            ></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="item">
+
+                        <div class="label">
+                            <span>ENCRYPTION</span>
+                            <span id="encryptionText">0%</span>
+                        </div>
+
+                        <div class="bar">
+                            <div
+                                class="fill"
+                                id="encryption"
+                            ></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="item">
+
+                        <div class="label">
+                            <span>DATABASE</span>
+                            <span id="databaseText">0%</span>
+                        </div>
+
+                        <div class="bar">
+                            <div
+                                class="fill"
+                                id="database"
+                            ></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="panel"
+                style="margin-top:18px"
+            >
+
+                <div class="panel-title">
+                    LIVE DATA STREAM
+                </div>
+
+                <div
+                    class="events"
+                    id="events"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+
+        <span>NODE: UNKNOWN</span>
+
+        <span>PROTOCOL: ENCRYPTED</span>
+
+        <span>
+            STATUS:
+            <span id="session">RUNNING</span>
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- FINAL SCREEN — NO RESTART BUTTON -->
+
+<div class="access" id="access">
+
+    <h1>
+        ACCESS GRANTED
+    </h1>
+
+    <div class="realname">
+        OMAR
+    </div>
+
+    <div class="encrypted">
+        ENCRYPTED ID: T01BUg==
+    </div>
+
+    <div class="time">
+        PROCESS TIME:
+        <span id="finalTime">00:00</span>
+    </div>
+
+</div>
+
+
+<script>
+
+/* ================================
+   MATRIX
+================================ */
+
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+
+const chars="01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
+const fontSize=14;
+
+let columns=Math.floor(canvas.width/fontSize);
+let drops=[];
+
+for(let i=0;i<columns;i++){
+    drops[i]=Math.random()*canvas.height/fontSize;
+}
+
+function matrix(){
+
+    ctx.fillStyle="rgba(0,0,0,.08)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.fillStyle="#00ff66";
+    ctx.font=fontSize+"px monospace";
+
+    for(let i=0;i<drops.length;i++){
+
+        const char=
+            chars[Math.floor(Math.random()*chars.length)];
+
+        ctx.fillText(
+            char,
+            i*fontSize,
+            drops[i]*fontSize
+        );
+
+        if(
+            drops[i]*fontSize>canvas.height &&
+            Math.random()>.975
+        ){
+            drops[i]=0;
+        }
+
+        drops[i]++;
+    }
+}
+
+setInterval(matrix,40);
+
+
+/* ================================
+   AUDIO
+================================ */
+
+let audioContext=null;
+
+function initAudio(){
+
+    if(!audioContext){
+
+        audioContext=
+            new(
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+    }
+
+    if(audioContext.state==="suspended"){
+        audioContext.resume();
+    }
+}
+
+
+/* DATA SOUNDS DURING PROCESS */
+
+function dataSound(){
+
+    try{
+
+        initAudio();
+
+        const osc=
+            audioContext.createOscillator();
+
+        const gain=
+            audioContext.createGain();
+
+        osc.type="square";
+
+        osc.frequency.value=
+            180+Math.random()*1000;
+
+        gain.gain.setValueAtTime(
+            .025,
+            audioContext.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            audioContext.currentTime+.045
+        );
+
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+
+        osc.start();
+
+        osc.stop(
+            audioContext.currentTime+.045
+        );
+
+    }catch(e){}
+}
+
+
+/* ================================
+   HORROR FINAL SOUND
+================================ */
+
+function horrorSound(){
+
+    try{
+
+        initAudio();
+
+        const now=
+            audioContext.currentTime;
+
+
+        /* Deep drone */
+
+        const drone=
+            audioContext.createOscillator();
+
+        const droneGain=
+            audioContext.createGain();
+
+        drone.type="sawtooth";
+
+        drone.frequency.setValueAtTime(
+            70,
+            now
+        );
+
+        drone.frequency.exponentialRampToValueAtTime(
+            32,
+            now+3.5
+        );
+
+        droneGain.gain.setValueAtTime(
+            .001,
+            now
+        );
+
+        droneGain.gain.exponentialRampToValueAtTime(
+            .16,
+            now+.8
+        );
+
+        droneGain.gain.exponentialRampToValueAtTime(
+            .001,
+            now+4
+        );
+
+        drone.connect(droneGain);
+        droneGain.connect(
+            audioContext.destination
+        );
+
+        drone.start(now);
+        drone.stop(now+4);
+
+
+        /* Creepy descending tone */
+
+        const tone=
+            audioContext.createOscillator();
+
+        const toneGain=
+            audioContext.createGain();
+
+        tone.type="sine";
+
+        tone.frequency.setValueAtTime(
+            1100,
+            now+.4
+        );
+
+        tone.frequency.exponentialRampToValueAtTime(
+            130,
+            now+3
+        );
+
+        toneGain.gain.setValueAtTime(
+            .001,
+            now
+        );
+
+        toneGain.gain.exponentialRampToValueAtTime(
+            .07,
+            now+.7
+        );
+
+        toneGain.gain.exponentialRampToValueAtTime(
+            .001,
+            now+3.2
+        );
+
+        tone.connect(toneGain);
+        toneGain.connect(
+            audioContext.destination
+        );
+
+        tone.start(now);
+        tone.stop(now+3.2);
+
+
+        /* Digital warning pulses */
+
+        [0,.35,.7,1.1,1.55].forEach(
+            (delay,index)=>{
+
+                setTimeout(()=>{
+
+                    const osc=
+                        audioContext.createOscillator();
+
+                    const gain=
+                        audioContext.createGain();
+
+                    osc.type="square";
+
+                    osc.frequency.value=
+                        130+index*100;
+
+                    gain.gain.setValueAtTime(
+                        .05,
+                        audioContext.currentTime
+                    );
+
+                    gain.gain.exponentialRampToValueAtTime(
+                        .001,
+                        audioContext.currentTime+.18
+                    );
+
+                    osc.connect(gain);
+                    gain.connect(
+                        audioContext.destination
+                    );
+
+                    osc.start();
+
+                    osc.stop(
+                        audioContext.currentTime+.18
+                    );
+
+                },delay*1000);
+
+            }
+        );
+
+    }catch(e){}
+}
+
+
+/* ================================
+   FINAL VOICE
+================================ */
+
+function finalVoice(){
+
+    try{
+
+        initAudio();
+
+        window.speechSynthesis.cancel();
+
+        const voice=
+            new SpeechSynthesisUtterance(
+                "Hack completed. Encrypted identifier: T zero one B U G. Real name: Omar."
+            );
+
+        voice.lang="en-US";
+        voice.rate=.72;
+        voice.pitch=.35;
+        voice.volume=1;
+
+        setTimeout(()=>{
+
+            window.speechSynthesis.speak(voice);
+
+        },2700);
+
+    }catch(e){}
+}
+
+
+/* ================================
+   TERMINAL
+================================ */
+
+const terminal=
+    document.getElementById("terminal");
+
+function addLine(text,className=""){
+
+    const line=
+        document.createElement("div");
+
+    line.className=
+        "line "+className;
+
+    line.innerHTML=text;
+
+    terminal.appendChild(line);
+
+    terminal.scrollTop=
+        terminal.scrollHeight;
+}
+
+
+/* ================================
+   LIVE DATA
+================================ */
+
+const events=
+    document.getElementById("events");
+
+const fakeData=[
+
+    "01001111 01001101 01000001 01010010",
+    "4F 4D 41 52",
+    "T01BUg==",
+    "PACKET 0xA91F",
+    "BUFFER 0x7F31",
+    "SIGNAL 0xCC82",
+    "DATA BLOCK 0912",
+    "HASH 6A9D032",
+    "NODE RESPONSE 200",
+    "STREAM SYNCHRONIZED",
+    "ENCRYPTED BLOCK RECEIVED",
+    "DECODING SEQUENCE",
+    "VALIDATING DATA"
+
+];
+
+let dataTimer;
+
+function addEvent(text){
+
+    const event=
+        document.createElement("div");
+
+    event.className="event";
+
+    event.innerText=
+        "["+
+        new Date().toLocaleTimeString()+
+        "] "+
+        text;
+
+    events.prepend(event);
+
+    if(events.children.length>18){
+        events.lastChild.remove();
+    }
+}
+
+function startData(){
+
+    dataTimer=setInterval(()=>{
+
+        const value=
+            fakeData[
+                Math.floor(
+                    Math.random()*fakeData.length
+                )
+            ];
+
+        addEvent(value);
+
+    },220);
+}
+
+
+/* ================================
+   PROGRESS BARS
+================================ */
+
+function progress(barID,textID,speed){
+
+    let value=0;
+
+    const bar=
+        document.getElementById(barID);
+
+    const text=
+        document.getElementById(textID);
+
+    const timer=setInterval(()=>{
+
+        value+=
+            Math.floor(Math.random()*5)+1;
+
+        if(value>=100){
+
+            value=100;
+            clearInterval(timer);
+
+        }
+
+        bar.style.width=value+"%";
+        text.innerText=value+"%";
+
+        if(Math.random()>.55){
+            dataSound();
+        }
+
+    },speed);
+}
+
+
+/* ================================
+   TERMINAL SEQUENCE
+================================ */
+
+function startTerminal(){
+
+    addLine(
+        "[+] Initializing secure environment...",
+        "dim"
+    );
+
+    setTimeout(()=>{
+        addLine(
+            "[+] Establishing encrypted channel..."
+        );
+    },1000);
+
+    setTimeout(()=>{
+        addLine(
+            "[+] Scanning network nodes..."
+        );
+    },2000);
+
+    setTimeout(()=>{
+        addLine(
+            "[+] Target node detected..."
+        );
+    },3000);
+
+    setTimeout(()=>{
+        addLine(
+            "[+] Analyzing security layers..."
+        );
+    },4000);
+
+    setTimeout(()=>{
+        addLine(
+            "[!] Firewall detected",
+            "warning"
+        );
+    },5000);
+
+    setTimeout(()=>{
+        addLine(
+            "[+] Processing security data..."
+        );
+    },6200);
+
+    setTimeout(()=>{
+        addLine(
+            "[+] Encrypted sequence located..."
+        );
+    },7500);
+
+    setTimeout(()=>{
+        addLine(
+            "[+] Preparing final decode..."
+        );
+    },8800);
+
+    setTimeout(()=>{
+        addLine(
+            "[+] Final verification..."
+        );
+    },10000);
+
+    setTimeout(()=>{
+        addLine(
+            "[+] Operation completed.",
+            "warning"
+        );
+    },11500);
+}
+
+
+/* ================================
+   START
+================================ */
+
+const startTime=Date.now();
+
+document.body.addEventListener(
+    "click",
+    ()=>{
+        initAudio();
+    },
+    {once:true}
+);
+
+startTerminal();
+startData();
+
+progress(
+    "network",
+    "networkText",
+    170
+);
+
+setTimeout(()=>{
+    progress(
+        "firewall",
+        "firewallText",
+        190
+    );
+},1500);
+
+setTimeout(()=>{
+    progress(
+        "encryption",
+        "encryptionText",
+        150
+    );
+},3000);
+
+setTimeout(()=>{
+    progress(
+        "database",
+        "databaseText",
+        180
+    );
+},4500);
+
+
+/* ================================
+   FINAL AFTER 14 SECONDS
+================================ */
+
+setTimeout(()=>{
+
+    clearInterval(dataTimer);
+
+    document.getElementById("session")
+        .innerText="COMPLETED";
+
+
+    const elapsed=
+        Math.floor(
+            (Date.now()-startTime)/1000
+        );
+
+    const minutes=
+        String(
+            Math.floor(elapsed/60)
+        ).padStart(2,"0");
+
+    const seconds=
+        String(
+            elapsed%60
+        ).padStart(2,"0");
+
+    document.getElementById("finalTime")
+        .innerText=
+        minutes+":"+seconds;
+
+
+    /* Show final screen */
+
+    document.getElementById("access")
+        .style.display="flex";
+
+
+    /* Horror sound first */
+
+    horrorSound();
+
+
+    /* Voice after horror sound */
+
+    setTimeout(()=>{
+        finalVoice();
+    },500);
+
+
+},14000);
+
+
+/* ================================
+   RESIZE
+================================ */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+        canvas.width=innerWidth;
+        canvas.height=innerHeight;
+    }
+);
+
+</script>
+
+</body>
+</html>
